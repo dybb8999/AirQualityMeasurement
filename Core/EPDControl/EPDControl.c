@@ -149,6 +149,23 @@ void EPD_W21_WriteDATA(uint8_t data)
 	EPD_W21_CS(1);
 }
 
+void PIC_display2(const uint8_t *picData_new, uint32_t len)
+{
+	EPD_W21_WriteCMD(0x10);			//Transfer old data
+
+	uint32_t i;
+	for(i=0;i<5808;i++)
+	{
+	  EPD_W21_WriteDATA(0xff);
+	}
+	EPD_W21_WriteCMD(0x13);		     //Transfer new data
+	for(i=0;i<len;i++)
+	{
+	  EPD_W21_WriteDATA(*picData_new);
+	  picData_new++;
+	}
+}
+
 void PIC_display(const uint8_t *picData_new)
 {
 	EPD_W21_WriteCMD(0x10);			//Transfer old data
@@ -258,22 +275,11 @@ void EPD_init()
 
 void EPD_Run()
 {
+
 	EPD_init();
-	PIC_display(gImage_1);
-	EPD_refresh();
-	//EPD_sleep();
-	DELAY_S(10);
-
-	//EPD_init();
-	PIC_display(gImage_2);
-	EPD_refresh();
-	//EPD_sleep();
-	DELAY_S(10);
-
-	//EPD_init();
-	//PIC_display(gImage_2);
-	PIC_display_Clean();
+	PIC_display2(g_Image3, sizeof(g_Image3));
 	EPD_refresh();
 	EPD_sleep();
 	DELAY_S(10);
+
 }

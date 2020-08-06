@@ -33,6 +33,7 @@ void lcd_chkstatus();
 
 void EPD_init();
 
+void PIC_dispaly2(const uint8_t* picData_new, const uint32_t len);
 void PIC_display(const uint8_t* picData_new);
 void PIC_display_Clean();
 

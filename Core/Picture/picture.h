@@ -3,5 +3,5 @@
 
 extern const unsigned char gImage_1[5808];
 extern const unsigned char gImage_2[5808];
-
+extern const unsigned char g_Image3[5808];
 #endif
