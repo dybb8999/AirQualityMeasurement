@@ -53,11 +53,11 @@ void EPD_W21_CS(uint8_t signal)
 {
 	if(signal == 1)
 	{
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_SET);
 	}
 	else
 	{
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_RESET);
 	}
 }
 
@@ -65,11 +65,11 @@ void EPD_W21_DC(uint8_t signal)
 {
 	if(signal == 1)
 	{
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_15, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_12, GPIO_PIN_SET);
 	}
 	else
 	{
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_15, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_12, GPIO_PIN_RESET);
 	}
 }
 
@@ -77,16 +77,17 @@ void EPD_W21_CLK(uint8_t signal)
 {
 	if(signal == 1)
 	{
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 	}
 	else
 	{
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	}
 }
 
 void SPI_Write(uint8_t command)
 {
+	/*
 	uint8_t i;
 	SPI_Delay(1);
 	for(i = 0; i < 8; ++i)
@@ -108,17 +109,19 @@ void SPI_Write(uint8_t command)
 		EPD_W21_CLK(1);
 		SPI_Delay(1);
 	}
+	*/
+	HAL_SPI_Transmit(&hspi1, &command, sizeof(command), 10000);
 }
 
 void EPD_W21_MOSI(uint8_t signal)
 {
 	if(signal == 1)
 	{
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
 	}
 	else
 	{
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
 	}
 }
 
@@ -167,7 +170,7 @@ void PIC_display_Clean()
 {
 	EPD_W21_WriteCMD(0x10);			//Transfer old data
 
-	uint8_t i;
+	uint32_t i;
 	for(i=0;i<5808;i++)
 	{
 	  EPD_W21_WriteDATA(0xff);
@@ -229,6 +232,7 @@ void EPD_init()
 	EPD_W21_WriteDATA(0x17);		//C
 
 	EPD_W21_WriteCMD(0x04);
+	lcd_chkstatus();
 
 	EPD_W21_WriteCMD(0x00);			//panel setting
 	EPD_W21_WriteDATA(0x1f);		//LUT from OTP，128x296
@@ -257,18 +261,19 @@ void EPD_Run()
 	EPD_init();
 	PIC_display(gImage_1);
 	EPD_refresh();
-	EPD_sleep();
-	DELAY_S(60);
+	//EPD_sleep();
+	DELAY_S(10);
 
-	EPD_init();
+	//EPD_init();
 	PIC_display(gImage_2);
 	EPD_refresh();
-	EPD_sleep();
-	DELAY_S(60);
+	//EPD_sleep();
+	DELAY_S(10);
 
-	EPD_init();
+	//EPD_init();
+	//PIC_display(gImage_2);
 	PIC_display_Clean();
 	EPD_refresh();
 	EPD_sleep();
-	DELAY_S(60);
+	DELAY_S(10);
 }

@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+extern SPI_HandleTypeDef hspi1;
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -58,18 +58,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define D_C_Pin GPIO_PIN_12
+#define D_C_GPIO_Port GPIOE
 #define BUSY_Pin GPIO_PIN_13
 #define BUSY_GPIO_Port GPIOE
 #define RES_Pin GPIO_PIN_14
 #define RES_GPIO_Port GPIOE
-#define D_C_Pin GPIO_PIN_15
-#define D_C_GPIO_Port GPIOE
 #define CS_Pin GPIO_PIN_8
 #define CS_GPIO_Port GPIOD
-#define SCK_Pin GPIO_PIN_9
-#define SCK_GPIO_Port GPIOD
-#define SDI_Pin GPIO_PIN_10
-#define SDI_GPIO_Port GPIOD
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

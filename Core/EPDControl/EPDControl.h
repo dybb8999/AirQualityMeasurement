@@ -9,6 +9,7 @@
 #define EPDCONTROL_H_
 
 #include <stdint.h>
+#include "../Inc/main.h"
 
 #define EPD_W21_SPI_SPEED (0x2)
 
