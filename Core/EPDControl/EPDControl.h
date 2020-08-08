@@ -32,15 +32,29 @@ void driver_delay_xms(uint32_t xms);
 void lcd_chkstatus();
 
 void EPD_init();
+void EPD_init_4Gray();
 
 void PIC_dispaly2(const uint8_t* picData_new, const uint32_t len);
 void PIC_display(const uint8_t* picData_new);
 void PIC_display_Clean();
+//4 grayscale demo function
+/********Color display description
+      white  gray1  gray2  black
+0x10|  01     01     00     00
+0x13|  01     00     01     00
+                                   ****************/
+void pic_display_4bit(void);
 
 void EPD_refresh();
 void EPD_sleep();
+void EPD_partial_display(uint16_t x,uint16_t y,const unsigned char *old_data,const unsigned char *new_data,unsigned int w,unsigned int l,unsigned char mode); //partial display
+void EPD_full(void pic_display());
 
 void DELAY_S(uint32_t delaytime);
+
+void lut();
+void lut1();
+void lut11();
 
 void EPD_Run();
 
