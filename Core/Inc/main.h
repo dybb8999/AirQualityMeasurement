@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-extern SPI_HandleTypeDef hspi1;
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -67,6 +67,8 @@ void Error_Handler(void);
 #define CS_Pin GPIO_PIN_8
 #define CS_GPIO_Port GPIOD
 /* USER CODE BEGIN Private defines */
+extern SPI_HandleTypeDef hspi1;
+extern UART_HandleTypeDef huart5;
 
 /* USER CODE END Private defines */
 

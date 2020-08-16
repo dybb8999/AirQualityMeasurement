@@ -23,8 +23,10 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "../EPDControl/EPDControl.h"
+#include "../PM25/PM25Control.h"
 #include "stm32f1xx_hal_spi.h"
 #include "stm32f1xx_hal_usart.h"
+#include "stm32f1xx_hal_uart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,6 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
 
+UART_HandleTypeDef huart5;
 USART_HandleTypeDef husart2;
 
 /* USER CODE BEGIN PV */
@@ -55,6 +58,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_USART2_Init(void);
+static void MX_UART5_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -94,9 +98,9 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_USART2_Init();
+  MX_UART5_Init();
   /* USER CODE BEGIN 2 */
-
-
+  InitAirQuality();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,10 +110,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  EPD_Run();
 
-	  //uint8_t
-	  //HAL_USART_Receive(husart, pRxData, Size, Timeout)
   }
   /* USER CODE END 3 */
 }
@@ -188,6 +189,39 @@ static void MX_SPI1_Init(void)
 }
 
 /**
+  * @brief UART5 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_UART5_Init(void)
+{
+
+  /* USER CODE BEGIN UART5_Init 0 */
+
+  /* USER CODE END UART5_Init 0 */
+
+  /* USER CODE BEGIN UART5_Init 1 */
+
+  /* USER CODE END UART5_Init 1 */
+  huart5.Instance = UART5;
+  huart5.Init.BaudRate = 9600;
+  huart5.Init.WordLength = UART_WORDLENGTH_8B;
+  huart5.Init.StopBits = UART_STOPBITS_1;
+  huart5.Init.Parity = UART_PARITY_NONE;
+  huart5.Init.Mode = UART_MODE_TX_RX;
+  huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart5.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN UART5_Init 2 */
+
+  /* USER CODE END UART5_Init 2 */
+
+}
+
+/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -234,6 +268,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, D_C_Pin|RES_Pin, GPIO_PIN_RESET);
@@ -264,7 +299,21 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void pfnCO2RecvCallback(struct __UART_HandleTypeDef *huart)
+{
+	if(huart == &huart5)
+	{
 
+	}
+}
+
+void pfnCO2ErrorCallback(struct __UART_HandleTypeDef *huart)
+{
+	if(huart == &huart5)
+	{
+
+	}
+}
 /* USER CODE END 4 */
 
 /**
