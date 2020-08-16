@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include "../Inc/main.h"
+#include "../ImageCreator/ImageCreator.h"
 
 #define EPD_W21_SPI_SPEED (0x2)
 
@@ -57,5 +58,7 @@ void lut1();
 void lut11();
 
 void EPD_Run();
+
+void EPD_DrawImage(uint8_t* pImage);
 
 #endif /* EPDCONTROL_H_ */

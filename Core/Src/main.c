@@ -24,9 +24,14 @@
 /* USER CODE BEGIN Includes */
 #include "../EPDControl/EPDControl.h"
 #include "../PM25/PM25Control.h"
+#include "../ImageCreator/ImageCreator.h"
 #include "stm32f1xx_hal_spi.h"
 #include "stm32f1xx_hal_usart.h"
 #include "stm32f1xx_hal_uart.h"
+#include "../Picture/picture.h"
+#include <stdint.h>
+#include <string.h>
+#include "../UI/UI.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,7 +65,8 @@ static void MX_SPI1_Init(void);
 static void MX_USART2_Init(void);
 static void MX_UART5_Init(void);
 /* USER CODE BEGIN PFP */
-
+HDC hdc = {0};
+uint8_t hdcBuff[5808];
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -101,16 +107,35 @@ int main(void)
   MX_UART5_Init();
   /* USER CODE BEGIN 2 */
   InitAirQuality();
+  //uint32_t str2 = '湿';
+  //FillColor(&hdc, 0, 0, HDC_WIDTH, HDC_HEIGH, 1);
+  //FillColor(&hdc, 0, 0, 40, 40, 0);
+  //for(int i = 0; i < 10; ++i)
+  //{
+//	  PutChar(&hdc, 8*i, 0, '0' + i, 16);
+  //}
+  //PutChar(&hdc, 0, 16, '2', 8);
+  //PutStr(&hdc, 0, 0, "01236789", 16);
+  //UIForAirQuality(&hdc);
+  //PutChar(&hdc, 0, 16, str2, 24);
+  //ConvertTo2Color(&hdc, (uint8_t*)hdcBuff);
+  //memcpy(hdc.Data, gImage_ta5, 5808);
+  //EPD_DrawImage(hdcBuff);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+	//FillColor(&hdc, 0, 0, 176, 264, 1);
+	//FillColor(&hdc, 0, 0, 20, 20, 0);
+	//ConvertTo2Color(&hdc, (uint8_t*)hdcBuff);
+	//index += 1;
+	//EPD_DrawImage(hdcBuff);
   }
   /* USER CODE END 3 */
 }

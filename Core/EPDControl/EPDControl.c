@@ -393,6 +393,16 @@ void EPD_Run()
 
 }
 
+void EPD_DrawImage(uint8_t* pImage)
+{
+	//2 gray picture(OTP)
+	EPD_init(); //EPD init
+	PIC_display(pImage); //Clear screen
+	EPD_refresh();//EPD_refresh
+	EPD_sleep();//EPD_sleep`
+	DELAY_S(2);
+}
+
 //4 grayscale demo function
 /********Color display description
       white  gray1  gray2  black
