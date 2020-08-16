@@ -125,17 +125,15 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	//FillColor(&hdc, 0, 0, 176, 264, 1);
-	//FillColor(&hdc, 0, 0, 20, 20, 0);
-	//ConvertTo2Color(&hdc, (uint8_t*)hdcBuff);
-	//index += 1;
-	//EPD_DrawImage(hdcBuff);
+	UIForAirQuality(&hdc);
+	ConvertTo2Color(&hdc, hdcBuff);
+	EPD_DrawImage(hdcBuff);
+	DELAY_S(5);
   }
   /* USER CODE END 3 */
 }

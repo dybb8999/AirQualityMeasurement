@@ -24,9 +24,9 @@ void pfnAirQualityRecvCallback(struct __UART_HandleTypeDef *huart)
 		return;
 	}
 
-	g_AirQuality.PM1 = htons(g_AirQualityRecvData.PM1Value.data) / 10;
-	g_AirQuality.PM2_5 = htons(g_AirQualityRecvData.PM2_5Value.data) / 10;
-	g_AirQuality.PM10 = htons(g_AirQualityRecvData.PM10Value.data) / 10;
+	g_AirQuality.PM1 = htons(g_AirQualityRecvData.PM1Value.data);
+	g_AirQuality.PM2_5 = htons(g_AirQualityRecvData.PM2_5Value.data);
+	g_AirQuality.PM10 = htons(g_AirQualityRecvData.PM10Value.data);
 	g_AirQuality.TVOC = htons(g_AirQualityRecvData.TOVC.data);
 	g_AirQuality.Temperature = htons(g_AirQualityRecvData.Temperature.data) / 10;
 	g_AirQuality.Tumidity = htons(g_AirQualityRecvData.Tumidity.data) / 10;

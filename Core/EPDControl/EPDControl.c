@@ -110,7 +110,8 @@ void SPI_Write(uint8_t command)
 		SPI_Delay(1);
 	}
 	*/
-	HAL_SPI_Transmit(&hspi1, &command, sizeof(command), 10000);
+	HAL_SPI_Transmit(&hspi1, &command, sizeof(command), -1);
+	//HAL_SPI_Transmit_IT(&hspi1, &command, sizeof(command));
 }
 
 void EPD_W21_MOSI(uint8_t signal)
@@ -400,7 +401,6 @@ void EPD_DrawImage(uint8_t* pImage)
 	PIC_display(pImage); //Clear screen
 	EPD_refresh();//EPD_refresh
 	EPD_sleep();//EPD_sleep`
-	DELAY_S(2);
 }
 
 //4 grayscale demo function
