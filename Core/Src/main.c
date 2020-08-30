@@ -22,6 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "../CO2/CO2.h"
 #include "../EPDControl/EPDControl.h"
 #include "../PM25/PM25Control.h"
 #include "../ImageCreator/ImageCreator.h"
@@ -51,6 +52,7 @@
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
 
+UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart5;
 USART_HandleTypeDef husart2;
 
@@ -64,9 +66,11 @@ static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_USART2_Init(void);
 static void MX_UART5_Init(void);
+static void MX_UART4_Init(void);
 /* USER CODE BEGIN PFP */
 HDC hdc = {0};
 uint8_t hdcBuff[5808];
+uint8_t hdcBuff2[5808];
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -105,22 +109,33 @@ int main(void)
   MX_SPI1_Init();
   MX_USART2_Init();
   MX_UART5_Init();
+  MX_UART4_Init();
   /* USER CODE BEGIN 2 */
+
   InitAirQuality();
-  //uint32_t str2 = '湿';
-  //FillColor(&hdc, 0, 0, HDC_WIDTH, HDC_HEIGH, 1);
-  //FillColor(&hdc, 0, 0, 40, 40, 0);
-  //for(int i = 0; i < 10; ++i)
-  //{
-//	  PutChar(&hdc, 8*i, 0, '0' + i, 16);
-  //}
-  //PutChar(&hdc, 0, 16, '2', 8);
-  //PutStr(&hdc, 0, 0, "01236789", 16);
-  //UIForAirQuality(&hdc);
-  //PutChar(&hdc, 0, 16, str2, 24);
-  //ConvertTo2Color(&hdc, (uint8_t*)hdcBuff);
-  //memcpy(hdc.Data, gImage_ta5, 5808);
-  //EPD_DrawImage(hdcBuff);
+  InitCo2Module();
+  GetCo2Value();
+
+  //初始化界面
+  uint8_t u8CurrentIndex = 0;
+  uint8_t *hdcbuffArray[2];
+  hdcbuffArray[0] = hdcBuff;
+  hdcbuffArray[1] = hdcBuff2;
+
+  FillColor(&hdc, 0, 0, 264, 176, 1);
+  ConvertTo2Color(&hdc, hdcbuffArray[u8CurrentIndex]);
+  EPD_DrawImage(hdcbuffArray[u8CurrentIndex]);
+  DELAY_S(5);
+
+  EPD_init_4Gray();
+  u8CurrentIndex ^= 1;
+
+  FillColor(&hdc, 0, 0, 264, 176, 0);
+  ConvertTo2Color(&hdc, hdcbuffArray[u8CurrentIndex]);
+  u8CurrentIndex ^= 1;
+
+  EPD_partial_display(0,0, hdcbuffArray[u8CurrentIndex ^ 1], hdcbuffArray[u8CurrentIndex], 176,264,0);
+  u8CurrentIndex ^= 1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -130,10 +145,18 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	//UIForAirQuality(&hdc);
+	//ConvertTo2Color(&hdc, hdcBuff);
+	//EPD_DrawImage(hdcBuff);
+	//DELAY_S(5);
+
 	UIForAirQuality(&hdc);
-	ConvertTo2Color(&hdc, hdcBuff);
-	EPD_DrawImage(hdcBuff);
-	DELAY_S(5);
+	ConvertTo2Color(&hdc, hdcbuffArray[u8CurrentIndex]);
+	EPD_partial_display(0,0, hdcbuffArray[u8CurrentIndex ^ 1], hdcbuffArray[u8CurrentIndex], 176,264,1);
+	u8CurrentIndex ^= 1;
+	DELAY_S(2);
+
+	GetCo2Value();
   }
   /* USER CODE END 3 */
 }
@@ -208,6 +231,39 @@ static void MX_SPI1_Init(void)
   /* USER CODE BEGIN SPI1_Init 2 */
 
   /* USER CODE END SPI1_Init 2 */
+
+}
+
+/**
+  * @brief UART4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_UART4_Init(void)
+{
+
+  /* USER CODE BEGIN UART4_Init 0 */
+
+  /* USER CODE END UART4_Init 0 */
+
+  /* USER CODE BEGIN UART4_Init 1 */
+
+  /* USER CODE END UART4_Init 1 */
+  huart4.Instance = UART4;
+  huart4.Init.BaudRate = 9600;
+  huart4.Init.WordLength = UART_WORDLENGTH_8B;
+  huart4.Init.StopBits = UART_STOPBITS_1;
+  huart4.Init.Parity = UART_PARITY_NONE;
+  huart4.Init.Mode = UART_MODE_TX_RX;
+  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN UART4_Init 2 */
+
+  /* USER CODE END UART4_Init 2 */
 
 }
 

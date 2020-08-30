@@ -9,6 +9,7 @@
 #include "UI.h"
 #include <string.h>
 #include "../PM25/PM25Control.h"
+#include "../CO2/CO2.h"
 #include <stdlib.h>
 
 void UIForAirQuality(PHDC hdc)
@@ -22,45 +23,85 @@ void UIForAirQuality(PHDC hdc)
 	FillColor(hdc, 0, 0, HDC_WIDTH, HDC_HEIGH, 1);
 
 	//PM1
-	PutStr(hdc, xOffset, yOffset, "PM1:", 16);
+	xOffset = 0;
+	xOffset = PutStr(hdc, xOffset, yOffset, "PM1:", 16);
 	itoa(g_AirQuality.PM1, numBuff, 10);
-	PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset = PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset += 2;
+
+	xOffset = PutStr(hdc, xOffset, yOffset, "ug", 12);
+	xOffset += PutChar(hdc, xOffset, yOffset, '/', 16);
+	xOffset += PutChar(hdc, xOffset, yOffset + 8, 'm', 12);
+	xOffset += PutChar(hdc, xOffset, yOffset + 4, '3', 8);
 	yOffset += 16;
 
 	//PM2.5
 	xOffset = 0;
-	PutStr(hdc, xOffset, yOffset, "PM2.5:", 16);
+	xOffset = PutStr(hdc, xOffset, yOffset, "PM2.5:", 16);
 	itoa(g_AirQuality.PM2_5, numBuff, 10);
-	PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset = PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset += 2;
+
+	xOffset = PutStr(hdc, xOffset, yOffset, "ug", 12);
+	xOffset += PutChar(hdc, xOffset, yOffset, '/', 16);
+	xOffset += PutChar(hdc, xOffset, yOffset + 8, 'm', 12);
+	xOffset += PutChar(hdc, xOffset, yOffset + 4, '3', 8);
 	yOffset += 16;
 
 	//PM10
 	xOffset = 0;
-	PutStr(hdc, xOffset, yOffset, "PM10:", 16);
+	xOffset = PutStr(hdc, xOffset, yOffset, "PM10:", 16);
 	itoa(g_AirQuality.PM10, numBuff, 10);
-	PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset = PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset += 2;
+
+	xOffset = PutStr(hdc, xOffset, yOffset, "ug", 12);
+	xOffset += PutChar(hdc, xOffset, yOffset, '/', 16);
+	xOffset += PutChar(hdc, xOffset, yOffset + 8, 'm', 12);
+	xOffset += PutChar(hdc, xOffset, yOffset + 4, '3', 8);
 	yOffset += 16;
 
 	//TVOC
 	xOffset = 0;
-	PutStr(hdc, xOffset, yOffset, "TVOC:", 16);
+	xOffset = PutStr(hdc, xOffset, yOffset, "TVOC:", 16);
 	itoa(g_AirQuality.TVOC, numBuff, 10);
-	PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset = PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset += 2;
+
+	xOffset = PutStr(hdc, xOffset, yOffset, "ppb", 16);
+
 	yOffset += 16;
 
 	//温度
 	xOffset = 0;
-	xOffset += PutStr(hdc, xOffset, yOffset, "温度", 24);
+	xOffset = PutStr(hdc, xOffset, yOffset, "温度", 16);
 	xOffset += PutChar(hdc, xOffset, yOffset, ':', 16);
 	itoa(g_AirQuality.Temperature, numBuff, 10);
-	PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset = PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset += 2;
+
+	xOffset = PutStr(hdc, xOffset, yOffset, "度", 16);
 	yOffset += 16;
 
 	//湿度
 	xOffset = 0;
-	xOffset += PutStr(hdc, xOffset, yOffset, "湿度", 24);
-	xOffset += PutChar(hdc, xOffset, yOffset, ':', 16);
+	xOffset = PutStr(hdc, xOffset, yOffset, "湿度:", 16);
 	itoa(g_AirQuality.Tumidity, numBuff, 10);
-	PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset = PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset += 2;
+
+	xOffset = PutStr(hdc, xOffset, yOffset, "%RH", 16);
+
+	yOffset += 16;
+
+	//Co2
+	xOffset = 0;
+	xOffset = PutStr(hdc, xOffset, yOffset, "CO", 16);
+	xOffset += PutChar(hdc, xOffset, yOffset + 6, '2', 8);
+	xOffset += PutChar(hdc, xOffset, yOffset, ':', 16);
+	itoa(g_u32Co2Value, numBuff, 10);
+	xOffset = PutStr(hdc, 80, yOffset, numBuff, 16);
+	xOffset += 2;
+	xOffset = PutStr(hdc, xOffset, yOffset, "ppm", 16);
 	yOffset += 16;
 }

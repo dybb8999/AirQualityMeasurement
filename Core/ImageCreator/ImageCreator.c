@@ -133,8 +133,8 @@ const FontInfo GetFontInfo(uint32_t ch, uint32_t size)
 		p = GetFontInfo_16Byte(ch);
 		break;
 
-	case 24:
-		p = GetFontInfo_24Byte(ch);
+	case 12:
+		p = GetFontInfo_12Byte(ch);
 		break;
 	}
 
@@ -148,6 +148,12 @@ const FontInfo GetFontInfo_8Byte(uint32_t ch)
 	{
 	case '2':
 		info.data = (uint8_t*)"\xF1\xEE\xEF\xF3\xFD\xFE\xE0\xFF";
+		info.w = 8;
+		info.h = 8;
+		break;
+
+	case '3':
+		info.data = (uint8_t*)"\xE0\xEF\xF7\xF3\xEF\xEE\xF1\xFF";
 		info.w = 8;
 		info.h = 8;
 		break;
@@ -220,8 +226,32 @@ const FontInfo GetFontInfo_16Byte(uint32_t ch)
 		info.h = 16;
 		break;
 
+	case 'b':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xF8\xF9\xF9\xE1\xC9\x99\x99\x99\x99\xC4\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'p':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xFF\xFF\xFF\xC4\x99\x99\x99\x99\x99\xC1\xF9\xF9\xF0";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'm':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xFF\xFF\xFF\xC8\x80\x94\x94\x94\x94\x94\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
 	case 'C':
 		info.data = (uint8_t*)"\xFF\xFF\xFF\xC3\x99\xBC\xFC\xFC\xFC\xFC\xBC\x99\xC3\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'H':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x9C\x9C\x9C\x9C\x80\x9C\x9C\x9C\x9C\x9C\xFF\xFF\xFF";
 		info.w = 8;
 		info.h = 16;
 		break;
@@ -240,6 +270,12 @@ const FontInfo GetFontInfo_16Byte(uint32_t ch)
 
 	case 'P':
 		info.data = (uint8_t*)"\xFF\xFF\xFF\xC0\x99\x99\x99\xC1\xF9\xF9\xF9\xF9\xF0\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'R':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xC0\x99\x99\x99\xC1\xC9\x99\x99\x99\x98\xFF\xFF\xFF";
 		info.w = 8;
 		info.h = 16;
 		break;
@@ -267,6 +303,36 @@ const FontInfo GetFontInfo_16Byte(uint32_t ch)
 		info.w = 8;
 		info.h = 16;
 		break;
+
+	case '/':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xFF\xFF\xBF\x9F\xCF\xE7\xF3\xF9\xFC\xFE\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case '%':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xFF\xFF\xBC\x9C\xCF\xE7\xF3\xF9\x9C\x9E\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case (uint32_t)'温':
+		info.data = (uint8_t*)"\xFF\xEF\x3D\xC0\xB3\xEF\xB7\xEF\x3E\xE0\xB9\xEF\xBB\xEF\x2F\xE0\xF7\xFF\x1B\xC0\xD8\xDA\xDB\xDA\xDB\xDA\xDB\xDA\x0B\x80\xFB\xFF";
+		info.w = 16;
+		info.h = 16;
+		break;
+
+	case (uint32_t)'度':
+		info.data = (uint8_t*)"\x7F\xFF\xFF\xDE\x03\x80\xBB\xFB\xBB\xEB\x03\xC0\xBB\xFB\x3B\xF8\xFB\xFF\x0B\xF0\xBB\xFB\x7B\xFD\xFB\xFE\x3D\xF9\xCE\x87\xF3\xDF";
+		info.w = 16;
+		info.h = 16;
+		break;
+
+	case (uint32_t)'湿':
+		info.data = (uint8_t*)"\xFF\xEF\x1D\xC0\xD3\xEF\xD7\xEF\x1E\xE0\xD9\xEF\xDB\xEF\x0F\xE0\x77\xFB\x7B\xFB\x68\xDB\x5B\xEB\x3B\xF3\x7B\xDB\x03\x80\xFB\xFF";
+		info.w = 16;
+		info.h = 16;
+		break;
 	default:
 		break;
 	}
@@ -274,11 +340,28 @@ const FontInfo GetFontInfo_16Byte(uint32_t ch)
 	return info;
 }
 
-const FontInfo GetFontInfo_24Byte(uint32_t ch)
+const FontInfo GetFontInfo_12Byte(uint32_t ch)
 {
 	FontInfo info = {0};
 	switch(ch)
 	{
+	case 'u':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xCC\xDD\xDD\xDD\xCD\xD3\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 12;
+		break;
+
+	case 'g':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xD3\xCD\xDD\xDD\xDD\xC3\xDF\xE3\xFF";
+		info.w = 8;
+		info.h = 12;
+		break;
+
+	case 'm':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xE8\xD5\xD5\xD5\xD5\xC0\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 12;
+		break;
 	case (uint32_t)'温':
 		info.data = (uint8_t*)"\x0D\xFC\xEB\xFD\x0F\xFC\xEE\xFD\x0D\xFC\xEB\xFD\xFD\xFF\x04\xF8\xD5\xFA\xD5\xFA\xD5\xFA\x01\xF0";
 		info.w = 16;

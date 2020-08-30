@@ -40,7 +40,8 @@ const FontInfo GetFontInfo(uint32_t ch, uint32_t size);
 
 const FontInfo GetFontInfo_8Byte(uint32_t ch);
 
+const FontInfo GetFontInfo_12Byte(uint32_t ch);
+
 const FontInfo GetFontInfo_16Byte(uint32_t ch);
 
-const FontInfo GetFontInfo_24Byte(uint32_t ch);
 #endif /* IMAGECREATOR_H_ */
