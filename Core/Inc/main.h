@@ -67,10 +67,17 @@ void Error_Handler(void);
 #define CS_Pin GPIO_PIN_8
 #define CS_GPIO_Port GPIOD
 /* USER CODE BEGIN Private defines */
+//Display
 extern SPI_HandleTypeDef hspi1;
+
+//AirQuality
 extern UART_HandleTypeDef huart5;
+
+//CO2
 extern UART_HandleTypeDef huart4;
 
+//WIFI Mode
+extern UART_HandleTypeDef huart2;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

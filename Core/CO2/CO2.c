@@ -48,7 +48,7 @@ void InitCo2Module()
 void GetCo2Value()
 {
 	HAL_UART_Transmit(&huart4, (uint8_t *)&g_Co2SendData, sizeof(g_Co2SendData), -1);
-	HAL_UART_Receive_IT(&huart4, (uint8_t*)&g_Co2Data, sizeof(g_Co2Data)-1);
+	HAL_UART_Receive_IT(&huart4, (uint8_t*)&g_Co2Data, sizeof(g_Co2Data));
 }
 
 void pfnCo2RecvCallback(struct __UART_HandleTypeDef *huart)

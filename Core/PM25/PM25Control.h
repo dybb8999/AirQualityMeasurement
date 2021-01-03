@@ -5,7 +5,7 @@
 #include "../Inc/main.h"
 #include "stm32f1xx_hal_uart.h"
 #include "stm32f1xx_hal_spi.h"
-#include "stm32f1xx_hal_usart.h"
+//#include "stm32f1xx_hal_usart.h"
 #include "stm32f1xx_hal_uart.h"
 typedef struct _AirQuality
 {

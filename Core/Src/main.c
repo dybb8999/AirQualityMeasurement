@@ -27,7 +27,8 @@
 #include "../PM25/PM25Control.h"
 #include "../ImageCreator/ImageCreator.h"
 #include "stm32f1xx_hal_spi.h"
-#include "stm32f1xx_hal_usart.h"
+#include "../WiFi/WiFi.h"
+//#include "stm32f1xx_hal_usart.h"
 #include "stm32f1xx_hal_uart.h"
 #include "../Picture/picture.h"
 #include <stdint.h>
@@ -54,7 +55,7 @@ SPI_HandleTypeDef hspi1;
 
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart5;
-USART_HandleTypeDef husart2;
+UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
@@ -64,7 +65,7 @@ USART_HandleTypeDef husart2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
-static void MX_USART2_Init(void);
+static void MX_USART2_UART_Init(void);
 static void MX_UART5_Init(void);
 static void MX_UART4_Init(void);
 /* USER CODE BEGIN PFP */
@@ -107,16 +108,18 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI1_Init();
-  MX_USART2_Init();
+  MX_USART2_UART_Init();
   MX_UART5_Init();
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
-  InitAirQuality();
-  InitCo2Module();
-  GetCo2Value();
+  InitWiFiModule();
+  //InitAirQuality();
+  //InitCo2Module();
+  //GetCo2Value();
 
-  //初始化界面
+  //初始化界�????
+  /*
   uint8_t u8CurrentIndex = 0;
   uint8_t *hdcbuffArray[2];
   hdcbuffArray[0] = hdcBuff;
@@ -136,27 +139,45 @@ int main(void)
 
   EPD_partial_display(0,0, hdcbuffArray[u8CurrentIndex ^ 1], hdcbuffArray[u8CurrentIndex], 176,264,0);
   u8CurrentIndex ^= 1;
+  */
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  //WIFI 已连接
+  /*
+  while(1)
+  {
+	  if(IsWiFiConnected() == 1 && IsWiFiReady() == 1 && IsGotIP() == 1)
+	  {
+		  break;
+	  }
+  }
+  */
+  //GetConnectedWiFiName();
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+
+	//GetConnectedWiFiName(strWiFiName, 128);
+
 	//UIForAirQuality(&hdc);
 	//ConvertTo2Color(&hdc, hdcBuff);
 	//EPD_DrawImage(hdcBuff);
-	//DELAY_S(5);
+	DELAY_S(5);
+	GetNetworkAddress();
+	//UIForAirQuality(&hdc);
+	//ConvertTo2Color(&hdc, hdcbuffArray[u8CurrentIndex]);
+	//EPD_partial_display(0,0, hdcbuffArray[u8CurrentIndex ^ 1], hdcbuffArray[u8CurrentIndex], 176,264,1);
+	//u8CurrentIndex ^= 1;
+	//DELAY_S(2);
 
-	UIForAirQuality(&hdc);
-	ConvertTo2Color(&hdc, hdcbuffArray[u8CurrentIndex]);
-	EPD_partial_display(0,0, hdcbuffArray[u8CurrentIndex ^ 1], hdcbuffArray[u8CurrentIndex], 176,264,1);
-	u8CurrentIndex ^= 1;
-	DELAY_S(2);
-
-	GetCo2Value();
+	//GetCo2Value();
   }
   /* USER CODE END 3 */
 }
@@ -305,7 +326,7 @@ static void MX_UART5_Init(void)
   * @param None
   * @retval None
   */
-static void MX_USART2_Init(void)
+static void MX_USART2_UART_Init(void)
 {
 
   /* USER CODE BEGIN USART2_Init 0 */
@@ -315,16 +336,15 @@ static void MX_USART2_Init(void)
   /* USER CODE BEGIN USART2_Init 1 */
 
   /* USER CODE END USART2_Init 1 */
-  husart2.Instance = USART2;
-  husart2.Init.BaudRate = 9600;
-  husart2.Init.WordLength = USART_WORDLENGTH_8B;
-  husart2.Init.StopBits = USART_STOPBITS_1;
-  husart2.Init.Parity = USART_PARITY_NONE;
-  husart2.Init.Mode = USART_MODE_TX_RX;
-  husart2.Init.CLKPolarity = USART_POLARITY_LOW;
-  husart2.Init.CLKPhase = USART_PHASE_1EDGE;
-  husart2.Init.CLKLastBit = USART_LASTBIT_DISABLE;
-  if (HAL_USART_Init(&husart2) != HAL_OK)
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
   {
     Error_Handler();
   }
@@ -350,10 +370,20 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, D_C_Pin|RES_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PA1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : D_C_Pin RES_Pin */
   GPIO_InitStruct.Pin = D_C_Pin|RES_Pin;
