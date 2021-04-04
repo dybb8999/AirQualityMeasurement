@@ -145,6 +145,7 @@ int main(void)
 
   InitWiFiModule();
   uint64_t lastUpdateUI = HAL_GetTick();
+  uint32_t delay = 5000;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -159,20 +160,22 @@ int main(void)
         SetMUXMode();
         StartServerMode();
         GetSSID();
+
+        delay = 2000;
       }
     }
     ProcessWifiData();
 
-    if (lastUpdateUI + 5000 < HAL_GetTick())
+    if (lastUpdateUI + delay < HAL_GetTick())
     {
+
+		UpdataPM25Data();
+		GetCo2Value();
 
       UIForAirQuality(&hdc);
       ConvertTo2Color(&hdc, hdcbuffArray[u8CurrentIndex]);
       EPD_partial_display(0, 0, hdcbuffArray[u8CurrentIndex ^ 1], hdcbuffArray[u8CurrentIndex], 176, 264, 1);
       u8CurrentIndex ^= 1;
-
-      UpdataPM25Data();
-      GetCo2Value();
 
       lastUpdateUI = HAL_GetTick();
     }
