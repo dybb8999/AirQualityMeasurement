@@ -91,3 +91,17 @@ void pfnAddress(char* buff)
 		}
 	}
 }
+
+void pfnAPInfo(char* buff)
+{
+	char* ssidStart = strstr(buff, "\"");
+	if(ssidStart != 0)
+	{
+		int i = 0;
+		for(ssidStart += 1; *ssidStart != '\"'; ++ssidStart, ++i)
+		{
+			g_WifiStatus.SSID[i] = *ssidStart;
+		}
+	}
+}
+

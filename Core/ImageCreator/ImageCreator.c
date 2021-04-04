@@ -47,7 +47,7 @@ void FillColor(PHDC hdc, int x, int y, int w, int h, uint8_t color)
 	}
 }
 
-uint32_t GetNextChat(const char* str, uint8_t* len)
+uint32_t GetNextChat(const char* str, uint32_t* len)
 {
 	uint32_t u32Ret = str[0];
 	uint32_t ch1 = str[0];
@@ -106,7 +106,7 @@ int PutChar(PHDC hdc, int x, int y, uint32_t ch, uint32_t fontsize)
 int PutStr(PHDC hdc, int x, int y, char* str, uint32_t fontsize)
 {
 	int xOffset = x;
-	int len = 0;
+	uint32_t len = 0;
 	for(int i = 0; str[i] != 0;)
 	{
 		uint32_t u32ch = GetNextChat(&str[i], &len);
@@ -244,8 +244,44 @@ const FontInfo GetFontInfo_16Byte(uint32_t ch)
 		info.h = 16;
 		break;
 
+	case 'A':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xF7\xE3\xC9\x9C\x9C\x80\x9C\x9C\x9C\x9C\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'B':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xC0\x99\x99\x99\xC1\x99\x99\x99\x99\xC0\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
 	case 'C':
 		info.data = (uint8_t*)"\xFF\xFF\xFF\xC3\x99\xBC\xFC\xFC\xFC\xFC\xBC\x99\xC3\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'D':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xE0\xC9\x99\x99\x99\x99\x99\x99\xC9\xE0\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'E':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x80\x99\xB9\xE9\xE1\xE9\xF9\xB9\x99\x80\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'F':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x80\x99\xB9\xE9\xE1\xE9\xF9\xF9\xF9\xF0\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'G':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xC3\x99\xBC\xFC\xFC\x84\x9C\x9C\x99\xA3\xFF\xFF\xFF";
 		info.w = 8;
 		info.h = 16;
 		break;
@@ -256,8 +292,38 @@ const FontInfo GetFontInfo_16Byte(uint32_t ch)
 		info.h = 16;
 		break;
 
+	case 'I':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xC3\xE7\xE7\xE7\xE7\xE7\xE7\xE7\xE7\xC3\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'J':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x87\xCF\xCF\xCF\xCF\xCF\xCC\xCC\xCC\xE1\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'K':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x98\x99\xC9\xC9\xE1\xE1\xC9\x99\x99\x98\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'L':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xF0\xF9\xF9\xF9\xF9\xF9\xF9\xB9\x99\x80\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
 	case 'M':
 		info.data = (uint8_t*)"\xFF\xFF\xFF\x9C\x88\x80\x80\x94\x9C\x9C\x9C\x9C\x9C\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'N':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x9C\x98\x90\x80\x84\x8C\x9C\x9C\x9C\x9C\xFF\xFF\xFF";
 		info.w = 8;
 		info.h = 16;
 		break;
@@ -274,8 +340,20 @@ const FontInfo GetFontInfo_16Byte(uint32_t ch)
 		info.h = 16;
 		break;
 
+	case 'Q':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xC1\x9C\x9C\x9C\x9C\x9C\x9C\x94\x84\xC1\xCF\x8F\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
 	case 'R':
 		info.data = (uint8_t*)"\xFF\xFF\xFF\xC0\x99\x99\x99\xC1\xC9\x99\x99\x99\x98\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'S':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xC1\x9C\x9C\xF9\xE3\xCF\x9F\x9C\x9C\xC1\xFF\xFF\xFF";
 		info.w = 8;
 		info.h = 16;
 		break;
@@ -286,8 +364,44 @@ const FontInfo GetFontInfo_16Byte(uint32_t ch)
 		info.h = 16;
 		break;
 
+	case 'U':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x9C\x9C\x9C\x9C\x9C\x9C\x9C\x9C\x9C\xC1\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
 	case 'V':
 		info.data = (uint8_t*)"\xFF\xFF\xFF\x9C\x9C\x9C\x9C\x9C\x9C\x9C\xC9\xE3\xF7\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'W':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x9C\x9C\x9C\x9C\x9C\x94\x94\x80\xC9\xC9\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'X':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x9C\x9C\xC9\xC9\xE3\xE3\xC9\xC9\x9C\x9C\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'Y':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x99\x99\x99\x99\xC3\xE7\xE7\xE7\xE7\xC3\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case 'Z':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\x80\x9C\x9E\xCF\xE7\xF3\xF9\xBC\x9C\x80\xFF\xFF\xFF";
+		info.w = 8;
+		info.h = 16;
+		break;
+
+	case '-':
+		info.data = (uint8_t*)"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\xFF\xFF\xFF\xFF\xFF\xFF\xFF";
 		info.w = 8;
 		info.h = 16;
 		break;

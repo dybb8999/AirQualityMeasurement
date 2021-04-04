@@ -11,6 +11,7 @@
 #include "../PM25/PM25Control.h"
 #include "../CO2/CO2.h"
 #include <stdlib.h>
+#include "../WiFi/WiFi.h"
 
 void UIForAirQuality(PHDC hdc)
 {
@@ -103,5 +104,23 @@ void UIForAirQuality(PHDC hdc)
 	xOffset = PutStr(hdc, 80, yOffset, numBuff, 16);
 	xOffset += 2;
 	xOffset = PutStr(hdc, xOffset, yOffset, "ppm", 16);
+	yOffset += 16;
+
+	//IP
+	xOffset = 0;
+	xOffset = PutStr(hdc, xOffset, yOffset, "IP:", 16);
+	xOffset = PutStr(hdc, 80, yOffset, g_WifiStatus.Address, 16);
+	yOffset += 16;
+
+	// AP Name
+	xOffset = 0;
+	xOffset = PutStr(hdc, xOffset, yOffset, "AP:", 16);
+	xOffset = PutStr(hdc, 80, yOffset, g_WifiStatus.SSID, 16);
+	yOffset += 16;
+
+	// AP IP
+	xOffset = 0;
+	xOffset = PutStr(hdc, xOffset, yOffset, "AP IP:", 16);
+	xOffset = PutStr(hdc, 80, yOffset, g_WifiStatus.APAddress, 16);
 	yOffset += 16;
 }

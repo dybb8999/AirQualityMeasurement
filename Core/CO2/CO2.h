@@ -34,7 +34,7 @@ typedef union _Co2ModuleRecvData
 	uint64_t u64Data;
 	struct
 	{
-		uint64_t StartPoint : 8;
+		//uint64_t StartPoint : 8;
 		uint64_t AddressCode : 8;
 		uint64_t FunctionCode : 8;
 		uint64_t VerifyCount : 8;

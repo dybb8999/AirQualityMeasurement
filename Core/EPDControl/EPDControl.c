@@ -229,15 +229,8 @@ void lcd_chkstatus()
 
 void DELAY_S(uint32_t delaytime)
 {
-	uint32_t i,j,k;
-	for(i=0;i<delaytime;i++)
-  {
-		for(j=0;j<4000;j++)
-		{
-			for(k=0;k<222;k++);
-
-		}
-	}
+	uint32_t u32End = HAL_GetTick() + delaytime * 1000;
+	while(u32End > HAL_GetTick());
 }
 
 void EPD_init()

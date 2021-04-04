@@ -30,6 +30,7 @@ typedef struct _WiFiStatus
 	char APAddress[32];
 
 	//WIFI Info
+	char SSID[32];
 	//IP Address
 	char Address[32];
 	//MAC Address
@@ -50,13 +51,19 @@ int IsWiFiReady();
 int IsWiFiConnected();
 int IsGotIP();
 
+void ProcessWifiData();
+
 void pfnWiFiRecvCallback(struct __UART_HandleTypeDef *huart);
 void pfnWiFiHalfRecvCallback(struct __UART_HandleTypeDef *huart);
 void pfnWiFiErrorCallback(struct __UART_HandleTypeDef *huart);
 
-void pfnProcessEvent(uint8_t* buff);
+void pfnProcessEvent(char* buff);
+int pfnClientRecv(char* buff);
 
 void GetConnectedWiFiName();
 void GetNetworkAddress();
+void GetSSID();
+void SetMUXMode();
+void StartServerMode();
 
 #endif /* WIFI_WIFI_H_ */

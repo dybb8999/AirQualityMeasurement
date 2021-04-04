@@ -21,4 +21,5 @@ void pfnWifiConnectInfo(char* buff);
 
 void pfnAddress(char* buff);
 
+void pfnAPInfo(char* buff);
 #endif /* WIFI_WIFICOMMAND_H_ */

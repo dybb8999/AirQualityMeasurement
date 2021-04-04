@@ -180,4 +180,6 @@ void pfnAirQualityErrorCallback(struct __UART_HandleTypeDef *huart);
 
 uint16_t htons(uint16_t data);
 
+void UpdataPM25Data();
+
 #endif

@@ -28,12 +28,12 @@
 #include "../ImageCreator/ImageCreator.h"
 #include "stm32f1xx_hal_spi.h"
 #include "../WiFi/WiFi.h"
-//#include "stm32f1xx_hal_usart.h"
 #include "stm32f1xx_hal_uart.h"
 #include "../Picture/picture.h"
 #include <stdint.h>
 #include <string.h>
 #include "../UI/UI.h"
+#include "stm32f1xx_hal.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -112,14 +112,12 @@ int main(void)
   MX_UART5_Init();
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
+  InitAirQuality();
+  InitCo2Module();
+  GetCo2Value();
 
-  InitWiFiModule();
-  //InitAirQuality();
-  //InitCo2Module();
-  //GetCo2Value();
+  //初始化界�??
 
-  //初始化界�????
-  /*
   uint8_t u8CurrentIndex = 0;
   uint8_t *hdcbuffArray[2];
   hdcbuffArray[0] = hdcBuff;
@@ -128,7 +126,7 @@ int main(void)
   FillColor(&hdc, 0, 0, 264, 176, 1);
   ConvertTo2Color(&hdc, hdcbuffArray[u8CurrentIndex]);
   EPD_DrawImage(hdcbuffArray[u8CurrentIndex]);
-  DELAY_S(5);
+  DELAY_S(3);
 
   EPD_init_4Gray();
   u8CurrentIndex ^= 1;
@@ -137,47 +135,47 @@ int main(void)
   ConvertTo2Color(&hdc, hdcbuffArray[u8CurrentIndex]);
   u8CurrentIndex ^= 1;
 
-  EPD_partial_display(0,0, hdcbuffArray[u8CurrentIndex ^ 1], hdcbuffArray[u8CurrentIndex], 176,264,0);
+  EPD_partial_display(0, 0, hdcbuffArray[u8CurrentIndex ^ 1], hdcbuffArray[u8CurrentIndex], 176, 264, 0);
   u8CurrentIndex ^= 1;
-  */
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  //WIFI 已连接
-  /*
-  while(1)
-  {
-	  if(IsWiFiConnected() == 1 && IsWiFiReady() == 1 && IsGotIP() == 1)
-	  {
-		  break;
-	  }
-  }
-  */
-  //GetConnectedWiFiName();
-
+  InitWiFiModule();
+  uint64_t lastUpdateUI = HAL_GetTick();
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    if (g_WifiStatus.IsReady == 1)
+    {
+      if (g_WifiStatus.IsConnected == 1 && g_WifiStatus.Name[0] == 0)
+      {
+        GetNetworkAddress();
+        GetConnectedWiFiName();
+        SetMUXMode();
+        StartServerMode();
+        GetSSID();
+      }
+    }
+    ProcessWifiData();
 
+    if (lastUpdateUI + 5000 < HAL_GetTick())
+    {
 
-	//GetConnectedWiFiName(strWiFiName, 128);
+      UIForAirQuality(&hdc);
+      ConvertTo2Color(&hdc, hdcbuffArray[u8CurrentIndex]);
+      EPD_partial_display(0, 0, hdcbuffArray[u8CurrentIndex ^ 1], hdcbuffArray[u8CurrentIndex], 176, 264, 1);
+      u8CurrentIndex ^= 1;
 
-	//UIForAirQuality(&hdc);
-	//ConvertTo2Color(&hdc, hdcBuff);
-	//EPD_DrawImage(hdcBuff);
-	DELAY_S(5);
-	GetNetworkAddress();
-	//UIForAirQuality(&hdc);
-	//ConvertTo2Color(&hdc, hdcbuffArray[u8CurrentIndex]);
-	//EPD_partial_display(0,0, hdcbuffArray[u8CurrentIndex ^ 1], hdcbuffArray[u8CurrentIndex], 176,264,1);
-	//u8CurrentIndex ^= 1;
-	//DELAY_S(2);
+      UpdataPM25Data();
+      GetCo2Value();
 
-	//GetCo2Value();
+      lastUpdateUI = HAL_GetTick();
+    }
   }
   /* USER CODE END 3 */
 }
@@ -337,7 +335,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 9600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -410,18 +408,16 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void pfnCO2RecvCallback(struct __UART_HandleTypeDef *huart)
 {
-	if(huart == &huart5)
-	{
-
-	}
+  if (huart == &huart5)
+  {
+  }
 }
 
 void pfnCO2ErrorCallback(struct __UART_HandleTypeDef *huart)
 {
-	if(huart == &huart5)
-	{
-
-	}
+  if (huart == &huart5)
+  {
+  }
 }
 /* USER CODE END 4 */
 

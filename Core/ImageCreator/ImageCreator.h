@@ -30,7 +30,7 @@ void ConvertTo2Color(PHDC hdc, uint8_t* image);
 
 void FillColor(PHDC hdc, int x, int y, int w, int h, uint8_t color);
 
-uint32_t GetNextChat(const char* str, uint8_t* len);
+uint32_t GetNextChat(const char* str, uint32_t* len);
 
 int PutChar(PHDC hdc, int x, int y, uint32_t ch, uint32_t fontsize);
 

@@ -29,8 +29,8 @@ void InitCo2Module()
 
 	HAL_UART_Transmit(&huart4, moduleChange, sizeof(moduleChange), -1);
 	//HAL_UART_Receive(&huart4, recvBuff, sizeof(recvBuff), -1);
-	HAL_UART_RegisterCallback(&huart4, HAL_UART_RX_COMPLETE_CB_ID, pfnCo2RecvCallback);
-	HAL_UART_RegisterCallback(&huart4, HAL_UART_ERROR_CB_ID, pfnCo2ErrorCallback);
+	//HAL_UART_RegisterCallback(&huart4, HAL_UART_RX_COMPLETE_CB_ID, pfnCo2RecvCallback);
+	//HAL_UART_RegisterCallback(&huart4, HAL_UART_ERROR_CB_ID, pfnCo2ErrorCallback);
 
 
 	g_Co2SendData.Info.AddressCode = 1;
@@ -42,18 +42,36 @@ void InitCo2Module()
 
 	HAL_UART_Transmit(&huart4, (uint8_t *)&g_Co2SendData, sizeof(g_Co2SendData), -1);
 	//HAL_UART_Receive(&huart4, (uint8_t*)&g_Co2Data, sizeof(g_Co2Data), -1);
-	HAL_UART_Receive_IT(&huart4, (uint8_t*)&g_Co2Data, sizeof(g_Co2Data));
+
+	//HAL_UART_Receive(&huart4, (uint8_t*)&g_Co2Data, sizeof(g_Co2Data), -1);
+	HAL_UART_Receive(&huart4, moduleChange, 8, 1000);
 }
 
 void GetCo2Value()
 {
+	uint8_t buff[16] = {0};
 	HAL_UART_Transmit(&huart4, (uint8_t *)&g_Co2SendData, sizeof(g_Co2SendData), -1);
-	HAL_UART_Receive_IT(&huart4, (uint8_t*)&g_Co2Data, sizeof(g_Co2Data));
+	HAL_UART_Receive(&huart4, buff, sizeof(buff), 1000);
+
+	uint32_t count = huart4.RxXferSize - huart4.RxXferCount;
+	for(uint32_t i = 0; i < count; ++i)
+	{
+		if(buff[i] == 1 && buff[i+1] == 3)
+		{
+			memcpy(&g_Co2Data, &buff[i], sizeof(g_Co2Data));
+			g_u32Co2Value = htons(g_Co2Data.Info.Concentration);
+			break;
+		}
+	}
 }
 
 void pfnCo2RecvCallback(struct __UART_HandleTypeDef *huart)
 {
 	g_u32Co2Value = htons(g_Co2Data.Info.Concentration);
+	if(g_u32Co2Value > 8000)
+	{
+		InitCo2Module();
+	}
 }
 
 void pfnCo2ErrorCallback(struct __UART_HandleTypeDef *huart)
