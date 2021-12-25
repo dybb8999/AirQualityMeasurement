@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/",
+                "${workspaceFolder}/Core/Inc",
+                "${workspaceFolder}/Drivers/CMSIS/Include/",
+                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F1xx/Include/",
+                "${workspaceFolder}/Drivers/STM32F1xx_HAL_Driver/Inc/"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "__CC_ARM"
+            ],
+            "windowsSdkVersion": "10.0.19041.0",
+            "compilerPath": "D:\\VS2019\\VC\\Tools\\MSVC\\14.29.30133\\bin\\Hostx64\\x64\\cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
