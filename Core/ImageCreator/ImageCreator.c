@@ -123,6 +123,7 @@ const FontInfo GetFontInfo(uint32_t ch, uint32_t size)
 	//从左到右从上到下
 	//横向八点位右高位
 	//取反
+	// https://www.23bei.com/tool-216.html
 	FontInfo p = {0};
 	switch(size)
 	{
@@ -447,6 +448,30 @@ const FontInfo GetFontInfo_16Byte(uint32_t ch)
 		info.w = 16;
 		info.h = 16;
 		break;
+		
+	case (uint32_t)'正':
+		info.data = (uint8_t*)"\xFF\xEF\x01\xC0\x7F\xFF\x7F\xFF\x7F\xFF\x7F\xFF\x77\xF7\x77\xE0\x77\xFF\x77\xFF\x77\xFF\x77\xFF\x77\xFF\x77\xDF\x00\x80\xFF\xFF";
+		info.w = 16;
+		info.h = 16;
+		break;
+
+	case (uint32_t)'在':
+		info.data = (uint8_t*)"\xBF\xFF\xBF\xFF\xBF\xDF\x00\x80\xDF\xFF\xDF\xFD\xEF\xFD\xEF\xF5\x37\xE0\xF3\xFD\xF5\xFD\xF6\xFD\xF7\xFD\xF7\xDD\x17\x80\xF7\xFF";
+		info.w = 16;
+		info.h = 16;
+		break;
+
+	case (uint32_t)'启':
+		info.data = (uint8_t*)"\x7F\xFF\xFF\xDE\x07\x80\xF7\xDF\xF7\xDF\xF7\xDF\x07\xC0\xF7\xFF\xF7\xDF\x07\x80\xE7\xDF\xEB\xDF\xEB\xDF\xED\xDF\x0E\xC0\xEF\xDF";
+		info.w = 16;
+		info.h = 16;
+		break;
+
+	case (uint32_t)'动':
+		info.data = (uint8_t*)"\xFF\xFD\xEF\xFD\xC1\xFD\xFF\xDD\x5F\x80\x80\xDD\xF7\xDD\xF7\xDD\xFB\xDD\xDB\xDD\xBD\xDE\x80\xDE\x7D\xDF\x7F\xDF\xBF\xEB\xDF\xF7";
+		info.w = 16;
+		info.h = 16;
+		break;
 	default:
 		break;
 	}
@@ -493,10 +518,36 @@ const FontInfo GetFontInfo_12Byte(uint32_t ch)
 		info.w = 16;
 		info.h = 12;
 		break;
-
 	default:
 		break;
 	}
 
 	return info;
+}
+
+void DrawLineH(PHDC hdc, int x, int y, int width, uint8_t color)
+{
+	for(int i = 0; i < width; ++i)
+	{
+		hdc->Data[x + i][y] = color;
+	}
+}
+
+void DrawLineV(PHDC hdc, int x, int y, int heigh, uint8_t color)
+{
+	for(int i = 0; i < heigh; ++i)
+	{
+		hdc->Data[x][y + i] = color;
+	}
+}
+
+void DrawRectangle(PHDC hdc, int x, int y, int w, int h, uint8_t color)
+{
+	for(int i = 0; i < w; ++i)
+	{
+		for(int j = 0; j < h; ++j)
+		{
+			hdc->Data[x+i][y + j] = color;
+		}
+	}
 }

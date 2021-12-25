@@ -12,4 +12,9 @@
 
 void UIForAirQuality(PHDC hdc);
 
+/*
+ * procgress : 0~100
+ */
+void UIForStartUp(PHDC hdc, int progress);
+
 #endif /* UI_H_ */

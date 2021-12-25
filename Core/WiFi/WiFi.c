@@ -46,14 +46,24 @@ void InitWiFiModule()
 
 	//HAL_UART_RX_HALFCOMPLETE_CB_ID
 	//HAL_UART_RegisterCallback(&huart2, HAL_UART_RX_HALFCOMPLETE_CB_ID, pfnWiFiHalfRecvCallback);
-	//HAL_UART_RegisterCallback(&huart2, HAL_UART_RX_COMPLETE_CB_ID, pfnWiFiRecvCallback);
-	//HAL_UART_RegisterCallback(&huart2, HAL_UART_ERROR_CB_ID, pfnWiFiErrorCallback);
+	HAL_UART_RegisterCallback(&huart2, HAL_UART_RX_COMPLETE_CB_ID, pfnWiFiRecvCallback);
+	HAL_UART_RegisterCallback(&huart2, HAL_UART_ERROR_CB_ID, pfnWiFiErrorCallback);
 
-	HAL_UART_Transmit(&huart2, g_CommandReset, sizeof(g_CommandReset), -1);
+	//HAL_UART_Transmit(&huart2, g_CommandReset, sizeof(g_CommandReset), -1);
 	//HAL_UART_Receive_IT(&huart2, g_wifiRecvBuff, 1024);
 
 	//启动
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+	StartWaitWifiData();
+}
+
+void StartWaitWifiData()
+{
+	g_WifiRecvData.MaxSize = 1024;
+	g_WifiRecvData.UsedSize = 0;
+	memset(g_WifiRecvData.buff,0,1024);
+
+	ProcessWifiData();
 }
 
 int IsWiFiReady()
@@ -75,7 +85,7 @@ void ProcessWifiData()
 {
 	while(1)
 	{
-		HAL_StatusTypeDef status = HAL_UART_Receive(&huart2, (uint8_t*)g_WifiRecvData.buff, 1024, 1000);
+		HAL_StatusTypeDef status = HAL_UART_Receive(&huart2, (uint8_t*)g_WifiRecvData.buff, 1024, 5000);
 		if(status != HAL_TIMEOUT && status != HAL_OK)
 		{
 			break;
@@ -88,43 +98,51 @@ void ProcessWifiData()
 		}
 
 		g_WifiRecvData.buff[count] = 0;
+
+		pfnProcessEvent(g_WifiRecvData.buff);
 		if(g_WifiStatus.IsReady == 1)
 		{
 			pfnClientRecv(g_WifiRecvData.buff);
 		}
-		pfnProcessEvent((uint8_t*)g_WifiRecvData.buff);
 	}
 }
 
 void GetConnectedWiFiName()
 {
-	HAL_UART_Transmit(&huart2, (uint8_t*)g_CommandConnectStatus, sizeof(g_CommandConnectStatus) - 1, -1);
-	HAL_UART_Receive(&huart2, (uint8_t*)g_WifiRecvData.buff, 1024, 1000);
+	char addressBuff[128];
+	memset(addressBuff, 0, 128);
 
-	uint16_t count = 1024 - huart2.RxXferCount;
-	g_WifiRecvData.buff[count] = 0;
-	pfnProcessEvent(g_WifiRecvData.buff);
+	HAL_UART_Transmit(&huart2, (uint8_t*)g_CommandConnectStatus, sizeof(g_CommandConnectStatus) - 1, -1);
+	HAL_UART_Receive(&huart2, (uint8_t*)addressBuff, 128, 1000);
+
+	uint16_t count = huart2.RxXferSize - huart2.RxXferCount;
+	addressBuff[count] = 0;
+	pfnProcessEvent(addressBuff);
 }
 
 void GetNetworkAddress()
 {
+	char addressBuff[128];
+	memset(addressBuff, 0, 128);
 	HAL_UART_Transmit(&huart2, (uint8_t*)g_CommandQueryAddress, sizeof(g_CommandQueryAddress) - 1, -1);
-	HAL_UART_Receive(&huart2, (uint8_t*)g_WifiRecvData.buff, 1024, 1000);
+	HAL_UART_Receive(&huart2, (uint8_t*)addressBuff, 128, 1000);
 
-	uint16_t count = 1024 - huart2.RxXferCount;
-	g_WifiRecvData.buff[count] = 0;
-	pfnProcessEvent(g_WifiRecvData.buff);
+	uint16_t count = huart2.RxXferSize - huart2.RxXferCount;
+	addressBuff[count] = 0;
+	pfnProcessEvent(addressBuff);
 }
 
 void GetSSID()
 {
+	char addressBuff[128];
+	memset(addressBuff, 0, 128);
 	char getAPName[] = "AT+CWSAP?\r\n";
 	HAL_UART_Transmit(&huart2, (uint8_t*)getAPName, sizeof(getAPName) - 1, -1);
-	HAL_UART_Receive(&huart2, (uint8_t*)g_WifiRecvData.buff, 1024, 1000);
+	HAL_UART_Receive(&huart2, (uint8_t*)addressBuff, 128, 1000);
 
-	uint16_t count = 1024 - huart2.RxXferCount;
-	g_WifiRecvData.buff[count] = 0;
-	pfnProcessEvent(g_WifiRecvData.buff);
+	uint16_t count = huart2.RxXferSize - huart2.RxXferCount;
+	addressBuff[count] = 0;
+	pfnProcessEvent(addressBuff);
 }
 
 void SetMUXMode()
@@ -150,7 +168,6 @@ void pfnProcessEvent(char* buff)
 		if(p != 0)
 		{
 			g_WifiCommandRoute[i].pfnCallback(p);
-			pOffset = p;
 		}
 	}
 }
@@ -192,16 +209,20 @@ int pfnClientRecv(char* buff)
 		char sendCommond[256] = {0};
 		sprintf(sendCommond,"AT+CIPSEND=%d,%d\r\n", id, strlen(retBuff));
 		HAL_UART_Transmit(&huart2, (uint8_t*)sendCommond, strlen(sendCommond), -1);
+
+		g_WifiRecvData.MaxSize = 1024;
+		g_WifiRecvData.UsedSize = 0;
 		while(1)
 		{
-			HAL_UART_Receive(&huart2, (uint8_t*)g_WifiRecvData.buff, 1024, 1000);
+			HAL_UART_Receive(&huart2, (uint8_t*)g_WifiRecvData.buff + g_WifiRecvData.UsedSize, 1024 - g_WifiRecvData.UsedSize, 1000);
 			uint32_t count = huart2.RxXferSize - huart2.RxXferCount;
 			if(count == 0)
 			{
 				break;
 			}
+			g_WifiRecvData.UsedSize += count;
 
-			g_WifiRecvData.buff[count] = 0;
+			g_WifiRecvData.buff[g_WifiRecvData.UsedSize] = 0;
 			char* pOffset = strstr(g_WifiRecvData.buff, ">");
 			if(pOffset != 0)
 			{
@@ -228,4 +249,27 @@ int pfnClientRecv(char* buff)
 		}
 	}while(0);
 	return id;
+}
+
+void pfnWiFiRecvCallback(struct __UART_HandleTypeDef *huart)
+{
+	uint16_t count = huart2.RxXferSize - huart2.RxXferCount;
+	do {
+		if(count == 0)
+		{		
+			break;
+		}
+
+		g_WifiRecvData.buff[count + 1] = 0;
+
+		pfnProcessEvent(g_WifiRecvData.buff);
+		pfnClientRecv(g_WifiRecvData.buff);
+	} while (0);
+
+	StartWaitWifiData();
+}
+
+void pfnWiFiErrorCallback(struct __UART_HandleTypeDef *huart)
+{
+	StartWaitWifiData();
 }

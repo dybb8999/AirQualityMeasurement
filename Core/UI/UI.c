@@ -113,14 +113,31 @@ void UIForAirQuality(PHDC hdc)
 	yOffset += 16;
 
 	// AP Name
-	xOffset = 0;
-	xOffset = PutStr(hdc, xOffset, yOffset, "AP:", 16);
-	xOffset = PutStr(hdc, 80, yOffset, g_WifiStatus.SSID, 16);
-	yOffset += 16;
+	// xOffset = 0;
+	// xOffset = PutStr(hdc, xOffset, yOffset, "AP:", 16);
+	// xOffset = PutStr(hdc, 80, yOffset, g_WifiStatus.SSID, 16);
+	// yOffset += 16;
 
 	// AP IP
-	xOffset = 0;
-	xOffset = PutStr(hdc, xOffset, yOffset, "AP IP:", 16);
-	xOffset = PutStr(hdc, 80, yOffset, g_WifiStatus.APAddress, 16);
-	yOffset += 16;
+	// xOffset = 0;
+	// xOffset = PutStr(hdc, xOffset, yOffset, "AP IP:", 16);
+	// xOffset = PutStr(hdc, 80, yOffset, g_WifiStatus.APAddress, 16);
+	// yOffset += 16;
+}
+
+void UIForStartUp(PHDC hdc, int progress)
+{
+	//清屏
+	FillColor(hdc, 0, 0, HDC_WIDTH, HDC_HEIGH, 1);
+
+	int xOffset = 90;
+	int yOffset = 70;
+	xOffset = PutStr(hdc, xOffset, yOffset, "正在启动:", 16);
+	DrawLineH(hdc, 0,90,262, 0);
+	DrawLineV(hdc, 0,90,20, 0);
+	DrawLineV(hdc, 262,90,20, 0);
+	DrawLineH(hdc, 0,110,263, 0);
+
+	int w = HDC_WIDTH * (progress * 1.0 / 100);
+	DrawRectangle(hdc, 0, 90, w, 20, 0);
 }

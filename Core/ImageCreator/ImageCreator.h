@@ -36,6 +36,9 @@ int PutChar(PHDC hdc, int x, int y, uint32_t ch, uint32_t fontsize);
 
 int PutStr(PHDC hdc, int x, int y, char* str, uint32_t fontsize);
 
+void DrawLineH(PHDC hdc, int x, int y, int width, uint8_t color);
+void DrawLineV(PHDC hdc, int x, int y, int heigh, uint8_t color);
+
 const FontInfo GetFontInfo(uint32_t ch, uint32_t size);
 
 const FontInfo GetFontInfo_8Byte(uint32_t ch);

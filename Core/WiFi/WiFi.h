@@ -60,6 +60,8 @@ void pfnWiFiErrorCallback(struct __UART_HandleTypeDef *huart);
 void pfnProcessEvent(char* buff);
 int pfnClientRecv(char* buff);
 
+void StartWaitWifiData();
+
 void GetConnectedWiFiName();
 void GetNetworkAddress();
 void GetSSID();

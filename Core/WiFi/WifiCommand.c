@@ -27,6 +27,15 @@ void pfnDisconnectedStatus(char* buff)
 void pfnWifiGotIP(char* buff)
 {
 	g_WifiStatus.IsGotIP = 1;
+
+	GetNetworkAddress();
+
+	GetConnectedWiFiName();
+
+	GetSSID();
+
+	SetMUXMode();
+	StartServerMode();
 }
 
 void pfnWifiConnectInfo(char* buff)

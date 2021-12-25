@@ -176,6 +176,7 @@ void PIC_display(const uint8_t *picData_new)
 	{
 	  EPD_W21_WriteDATA(0xff);
 	}
+
 	EPD_W21_WriteCMD(0x13);		     //Transfer new data
 	for(i=0;i<5808;i++)
 	{
